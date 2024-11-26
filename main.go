@@ -29,9 +29,15 @@ func eventsHandler(w http.ResponseWriter, r *http.Request) {
 		w.(http.Flusher).Flush()
 	}
 
-	// Simulate closing the connection
-	closeNotify := w.(http.CloseNotifier).CloseNotify()
-	<-closeNotify
+	select {
+	case <-r.Context().Done():
+		fmt.Println(r.Context().Err())
+		return
+	default:
+	}
 
-	fmt.Println("close")
+	// Simulate closing the connection
+	//closeNotify := w.(http.CloseNotifier).CloseNotify()
+	//<-closeNotify
+
 }
